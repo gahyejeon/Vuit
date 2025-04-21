@@ -35,6 +35,7 @@ struct ContentView: View {
                         switch homeStatus {
                         case .empty:
                             VStack(spacing: 10) {
+                                // 내용 수정해야 함
                                 Text("로고")
                                     .padding(.top, 200)
                                     .foregroundColor(.gray)
