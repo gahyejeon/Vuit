@@ -10,6 +10,8 @@ import SwiftUI
 struct DetailView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
+    @State private var isNavigationToPostingView = false
+    
     var item: Item
     
     var body: some View {
@@ -32,7 +34,8 @@ struct DetailView: View {
                     Spacer()
                     
                     Button("수정하기") {
-                        // 수정 기능
+                        // 작성화면 연결
+                        isNavigationToPostingView = true
                     }
                     .padding()
                     .background(Color.clear)
@@ -51,6 +54,9 @@ struct DetailView: View {
             }
             .padding()
             .navigationTitle("부잇 - 상세글보기")
+            .navigationDestination(isPresented: $isNavigationToPostingView) {
+                PostingView()
+            }
         }
     }
     
