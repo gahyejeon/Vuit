@@ -15,6 +15,4 @@ extension Color {
     // 포스트 색상
     static let postColor = Color(red: 255/255, green: 244/255, blue: 163/255)
     
-    
-    
 }

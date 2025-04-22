@@ -8,14 +8,10 @@
 import SwiftUI
 import SwiftData
 
-enum HomeStatus {
-    case empty
-    case populated([Item])
-}
-
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Item.timestamp, order: .reverse) private var items: [Item]
+    @State private var isPresentingPostingView = false
     
     var homeStatus: HomeStatus {
         if items.isEmpty {
@@ -57,15 +53,25 @@ struct ContentView: View {
                     .frame(maxWidth: .infinity)
                 }
                 
-                Button(action: addItem) {
+//                Button(action: addItem) {
+//                    Image("postButton")
+//                }
+                Button(action: {
+                    isPresentingPostingView = true
+                }) {
                     Image("postButton")
                 }
                 .padding()
-            }
+                
+                }
             .navigationTitle("부잇")
             .navigationBarTitleDisplayMode(.inline)   // 라지타이틀 없애버리기
             .toolbarBackground(Color.backColor, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar) // 투명을 보이게 바꾸기
+            // navigationDestination 위치
+            .navigationDestination(isPresented: $isPresentingPostingView) {
+                PostingView()
+            }
         }
     }
                 
@@ -79,12 +85,16 @@ struct ContentView: View {
                 Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
                     .font(.body)
                     .foregroundColor(.black)
+                Text(item.text)
+                    .font(.body)
+                    .foregroundColor(.black)
             }
             .padding()
             .frame(maxWidth: .infinity, minHeight: 300)
             .background(
                 RoundedRectangle(cornerRadius: 20)
                     .fill(Color.postColor)
+                    .shadow(color: Color.gray.opacity(0.5), radius: 5, x: 4, y: 4)
             )
             .padding(.horizontal)
         }
@@ -94,7 +104,7 @@ struct ContentView: View {
 
     private func addItem() {
         withAnimation {
-            let newItem = Item(timestamp: Date())
+            let newItem = Item(timestamp: Date(), text: "샘플")
             modelContext.insert(newItem)
         }
     }
@@ -107,3 +117,7 @@ struct ContentView: View {
     ContentView()
         .modelContainer(for: Item.self, inMemory: true)
 }
+
+
+
+// 보이는 글 정렬 정해야하고
