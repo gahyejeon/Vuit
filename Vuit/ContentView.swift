@@ -53,9 +53,6 @@ struct ContentView: View {
                     .frame(maxWidth: .infinity)
                 }
                 
-//                Button(action: addItem) {
-//                    Image("postButton")
-//                }
                 Button(action: {
                     isPresentingPostingView = true
                 }) {
@@ -90,7 +87,8 @@ struct ContentView: View {
                     .foregroundColor(.black)
             }
             .padding()
-            .frame(maxWidth: .infinity, minHeight: 300)
+            .frame(maxWidth: .infinity)
+            .frame(height: 300)
             .background(
                 RoundedRectangle(cornerRadius: 20)
                     .fill(Color.postColor)

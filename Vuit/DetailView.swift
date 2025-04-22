@@ -19,15 +19,21 @@ struct DetailView: View {
             Color.backColor.ignoresSafeArea()
             
             VStack(alignment: .leading, spacing: 16) {
-                // 아이템 정보 박스
-                RoundedRectangle(cornerRadius: 20)
-                    .fill(Color.postColor)
-                    .frame(height: 300)
-                    .overlay(
-                        Text("Created at \(item.timestamp.formatted(date: .abbreviated, time: .shortened))")
-                            .foregroundStyle(.black)
-                            .padding()
-                    )
+                
+                // 텍스트보이는 곳 스크롤 가능하게 하기 위해 스크롤뷰로 수정
+                ZStack(alignment: .topLeading) {
+                        RoundedRectangle(cornerRadius: 20)
+                            .fill(Color.postColor)
+                            .frame(minHeight: 300, maxHeight: 400)
+
+                        ScrollView {
+                            Text(item.text)
+                                .foregroundStyle(.black)
+                                .padding()
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        .frame(minHeight: 300, maxHeight: 400)
+                    }
                 
                 // 버튼 두 개를 HStack으로 붙이기
                 HStack(spacing: 5) {
@@ -62,6 +68,8 @@ struct DetailView: View {
     
 }
 
+
+// 삭제 얼럿 창 만들기
 
 
 
