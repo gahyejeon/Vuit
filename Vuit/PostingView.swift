@@ -11,6 +11,8 @@ struct PostingView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     
+    var editingItem: Item? // 수정할 아이템
+    
     @State private var postText: String = ""
     
     var body: some View {
@@ -43,9 +45,15 @@ struct PostingView: View {
                 // 저장 버튼 (여기로할지 네비게이션바 오른쪽으로 할지..)
                 HStack {
                     Spacer()
-                    Button("작성하기") {
-                        let newItem = Item(text: postText)
-                        modelContext.insert(newItem)
+                    Button(editingItem == nil ? "작성하기" : "수정완료") {
+                        if let editingItem = editingItem {
+                            editingItem.text = postText
+                        } else {
+                            let newItem = Item(timestamp: Date(), text: postText)
+                            modelContext.insert(newItem)
+                        }
+//                        let newItem = Item(text: postText)
+//                        modelContext.insert(newItem)
                         dismiss()
                     }
                     .padding()
@@ -57,7 +65,12 @@ struct PostingView: View {
                 Spacer()
             }
             .padding()
-            .navigationTitle("글 작성하기")
+            .navigationTitle(editingItem == nil ? "글 작성하기" : "글 수정하기")
+            .onAppear {
+                if let editingItem = editingItem {
+                    postText = editingItem.text
+                }
+            }
         }
     }
 }

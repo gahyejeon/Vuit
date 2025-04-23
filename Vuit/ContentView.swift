@@ -67,7 +67,7 @@ struct ContentView: View {
             .toolbarBackground(.visible, for: .navigationBar) // 투명을 보이게 바꾸기
             // navigationDestination 위치
             .navigationDestination(isPresented: $isPresentingPostingView) {
-                PostingView()
+                PostingView(editingItem: nil)
             }
         }
     }
@@ -102,7 +102,7 @@ struct ContentView: View {
 
     private func addItem() {
         withAnimation {
-            let newItem = Item(timestamp: Date(), text: "샘플")
+            let newItem = Item(id: UUID(), timestamp: Date(), text: "샘플")
             modelContext.insert(newItem)
         }
     }
@@ -113,7 +113,8 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
+        .modelContainer(for: [Item.self, Comment.self], inMemory: true)
+//        .modelContainer(for: Item.self, inMemory: true)
 }
 
 

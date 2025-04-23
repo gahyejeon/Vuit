@@ -6,13 +6,25 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct DetailView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
+    
+    @Query var allComments: [Comment]
+    
     @State private var isNavigationToPostingView = false
+    @State private var deleteAlert = false
+    
+    @State private var newCommentText = ""
+    @State private var editingComment: Comment?
     
     var item: Item
+    
+    var commentsForItem: [Comment] {
+        allComments.filter { $0.item?.id == item.id}.sorted { $0.createdAt > $1.createdAt }
+    }
     
     var body: some View {
         ZStack {
@@ -24,7 +36,7 @@ struct DetailView: View {
                 ZStack(alignment: .topLeading) {
                         RoundedRectangle(cornerRadius: 20)
                             .fill(Color.postColor)
-                            .frame(minHeight: 300, maxHeight: 400)
+                            .frame(height: 300)
 
                         ScrollView {
                             Text(item.text)
@@ -32,7 +44,7 @@ struct DetailView: View {
                                 .padding()
                                 .frame(maxWidth: .infinity, alignment: .leading)
                         }
-                        .frame(minHeight: 300, maxHeight: 400)
+                        .frame(height: 300)
                     }
                 
                 // 버튼 두 개를 HStack으로 붙이기
@@ -48,12 +60,64 @@ struct DetailView: View {
                     .foregroundStyle(.gray)
                     
                     Button("삭제하기") {
-                        modelContext.delete(item)
-                        dismiss()
+                        deleteAlert = true
                     }
                     .padding()
-                    .background(Color.clear)
+//                    .background(Color.clear)
                     .foregroundStyle(.gray)
+                }
+                
+                Divider()
+                
+                // 댓글
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("댓글")
+                        .font(.headline)
+                    
+                    ScrollView {
+                        VStack(spacing: 8) {
+                            ForEach(commentsForItem) { comment in
+                                HStack {
+                                    Text(comment.text)
+                                        .foregroundColor(.primary)
+                                    
+                                    Spacer()
+                                    
+                                    Button("수정") {
+                                        newCommentText = comment.text
+                                        editingComment = comment
+                                    }
+                                    .font(.caption)
+                                    
+                                    Button("삭제") {
+                                        modelContext.delete(comment)
+                                    }
+                                    .foregroundColor(.red)
+                                    .font(.caption)
+                                }
+                                .padding(.horizontal)
+                            }
+                        }
+                    }
+                    .frame(maxHeight: 100)
+                }
+                
+                // 댓글 입력창
+                HStack {
+                    TextField("댓글을 입력하세요", text: $newCommentText)
+                        .textFieldStyle(.roundedBorder)
+                    
+                    Button(editingComment == nil ? "확인" : "수정완료") {
+                        if let editing = editingComment {
+                            editing.text = newCommentText
+                            editingComment = nil
+                        } else {
+                            let newComment = Comment(text: newCommentText, item: item)
+                            modelContext.insert(newComment)
+                        }
+                        newCommentText = ""
+                    }
+                    .disabled(newCommentText.isEmpty)
                 }
                 
                 Spacer()
@@ -61,7 +125,14 @@ struct DetailView: View {
             .padding()
             .navigationTitle("부잇 - 상세글보기")
             .navigationDestination(isPresented: $isNavigationToPostingView) {
-                PostingView()
+                PostingView(editingItem: item)
+            }
+            .alert("정말 삭제하시겠습니까?", isPresented: $deleteAlert) {
+                Button("삭제", role: .destructive) {
+                    modelContext.delete(item)
+                    dismiss()
+                }
+                Button("취소", role: .cancel) { }
             }
         }
     }
@@ -69,7 +140,7 @@ struct DetailView: View {
 }
 
 
-// 삭제 얼럿 창 만들기
+// 댓글
 
 
 

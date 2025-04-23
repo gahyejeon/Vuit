@@ -10,10 +10,13 @@ import SwiftData
 
 @Model
 final class Item {
-    var timestamp: Date = Date()
-    var text: String = ""
-    
-    init(timestamp: Date = Date(), text: String) {
+    @Attribute(.unique) var id: UUID
+    var timestamp: Date
+    var text: String
+    @Relationship(inverse: \Comment.item) var comments: [Comment] = []
+
+    init(id: UUID = UUID(), timestamp: Date, text: String) {
+        self.id = id
         self.timestamp = timestamp
         self.text = text
     }
