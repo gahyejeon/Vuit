@@ -20,6 +20,8 @@ struct DetailView: View {
     @State private var newCommentText = ""
     @State private var editingComment: Comment?
     
+    @FocusState private var isCommentFocused: Bool // 입력창 포커싱 감지
+    
     var item: Item
     
     var commentsForItem: [Comment] {
@@ -29,6 +31,9 @@ struct DetailView: View {
     var body: some View {
         ZStack {
             Color.backColor.ignoresSafeArea()
+                .onTapGesture {
+                    isCommentFocused = false // 화면 탭하면 키보드 내려가기
+                }
             
             VStack(alignment: .leading, spacing: 16) {
                 
@@ -107,6 +112,7 @@ struct DetailView: View {
                 HStack {
                     TextField("댓글을 입력하세요", text: $newCommentText)
                         .textFieldStyle(.roundedBorder)
+                        .focused($isCommentFocused) // 포커싱 연결
                     
                     Button(editingComment == nil ? "확인" : "수정완료") {
                         if let editing = editingComment {
@@ -117,6 +123,7 @@ struct DetailView: View {
                             modelContext.insert(newComment)
                         }
                         newCommentText = ""
+                        isCommentFocused = false // 완료 후 키보드 내리기
                     }
                     .disabled(newCommentText.isEmpty)
                 }
