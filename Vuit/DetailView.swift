@@ -39,17 +39,24 @@ struct DetailView: View {
                 
                 // 텍스트보이는 곳 스크롤 가능하게 하기 위해 스크롤뷰로 수정
                 ZStack(alignment: .topLeading) {
-                        RoundedRectangle(cornerRadius: 0)
+                        Rectangle()
                             .fill(Color.postColor)
                             .shadow(color: Color.gray.opacity(0.5), radius: 5, x: 4, y: 4)
                             .frame(height: 300)
 
                         ScrollView {
-                            Text(item.text)
-                                .foregroundStyle(.black)
-                                .padding()
-                                .frame(maxWidth: .infinity, alignment: .leading)
+                            VStack{
+                                Spacer()
+                                Text(item.text)
+                                    .foregroundStyle(.black)
+                                    .padding()
+                                    .multilineTextAlignment(.center)
+                                    .frame(maxWidth: .infinity)
+                                Spacer()
+                            }
+                            .frame(height: 300)
                         }
+                        .padding(.bottom, 15)
                         .frame(height: 300)
                     }
                 
