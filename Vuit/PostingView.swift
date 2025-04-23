@@ -22,8 +22,9 @@ struct PostingView: View {
             VStack(alignment: .leading, spacing: 16) {
                 ZStack(alignment: .topLeading) {
                     // 배경 박스
-                    RoundedRectangle(cornerRadius: 20)
+                    RoundedRectangle(cornerRadius: 0)
                         .fill(Color.postColor)
+                        .shadow(color: Color.gray.opacity(0.5), radius: 5, x: 4, y: 4)
                         .frame(height: 300)
                     
                     // 텍스트 에디터

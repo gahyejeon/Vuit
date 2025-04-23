@@ -31,13 +31,16 @@ struct ContentView: View {
                         switch homeStatus {
                         case .empty:
                             VStack(spacing: 10) {
-                                // 내용 수정해야 함
-                                Text("로고")
-                                    .padding(.top, 200)
+                                Image("vuimage")
+                                    .padding(.top, 100)
+                                Text("부끄러운 경험을")
                                     .foregroundColor(.gray)
-                                Text("부끄러운 경험을 공유해주세요!")
+                                    .font(.system(size: 24, weight: .medium))
+                                    .padding(.top)
+                                
+                                Text("공유해주세요!")
                                     .foregroundColor(.gray)
-                                    .padding()
+                                    .font(.system(size: 24, weight: .medium))
                             }
                             .frame(maxWidth: .infinity, minHeight: 500)
                             
@@ -79,7 +82,7 @@ struct ContentView: View {
             DetailView(item: item)
         } label: {
             VStack(alignment: .leading, spacing: 8) {
-                Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
+                Text(item.timestamp, format: Date.FormatStyle(date: .abbreviated, time: .shortened))
                     .font(.body)
                     .foregroundColor(.black)
                 Text(item.text)
@@ -90,7 +93,7 @@ struct ContentView: View {
             .frame(maxWidth: .infinity)
             .frame(height: 300)
             .background(
-                RoundedRectangle(cornerRadius: 20)
+                RoundedRectangle(cornerRadius: 0)
                     .fill(Color.postColor)
                     .shadow(color: Color.gray.opacity(0.5), radius: 5, x: 4, y: 4)
             )

@@ -23,7 +23,7 @@ struct DetailView: View {
     var item: Item
     
     var commentsForItem: [Comment] {
-        allComments.filter { $0.item?.id == item.id}.sorted { $0.createdAt > $1.createdAt }
+        item.comments.sorted { $0.createdAt < $1.createdAt }
     }
     
     var body: some View {
@@ -34,8 +34,9 @@ struct DetailView: View {
                 
                 // 텍스트보이는 곳 스크롤 가능하게 하기 위해 스크롤뷰로 수정
                 ZStack(alignment: .topLeading) {
-                        RoundedRectangle(cornerRadius: 20)
+                        RoundedRectangle(cornerRadius: 0)
                             .fill(Color.postColor)
+                            .shadow(color: Color.gray.opacity(0.5), radius: 5, x: 4, y: 4)
                             .frame(height: 300)
 
                         ScrollView {
@@ -124,6 +125,8 @@ struct DetailView: View {
             }
             .padding()
             .navigationTitle("부잇 - 상세글보기")
+            .toolbarBackground(Color.backColor, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
             .navigationDestination(isPresented: $isNavigationToPostingView) {
                 PostingView(editingItem: item)
             }
@@ -140,7 +143,6 @@ struct DetailView: View {
 }
 
 
-// 댓글
 
 
 
